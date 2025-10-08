@@ -9,23 +9,17 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "rol")
-public class Rol{
+public class Rol {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idRol", length = 20)
+    @Column(name = "id_rol", nullable = false) 
     private Long idRol;
 
     @Column(name = "rol", nullable = false, length = 50)
     private String rol;
 
-    public Rol(){
-    }
-
-    public Rol(Long idRol, String rol) {
-        this.idRol = idRol;
-        this.rol = rol;
-    }
-
+    // Getters y Setters
     public Long getIdRol() {
         return idRol;
     }
@@ -39,17 +33,5 @@ public class Rol{
     }
 
     public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    @Override
-    public String toString() {
-        return "Rol{" +
-                "idRol=" + idRol +
-                ", rol='" + rol + '\'' +
-                '}';
-    }
-
-
-
+        this.rol = rol;    }
 }

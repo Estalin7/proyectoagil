@@ -2,6 +2,7 @@ package com.grupoagil.proyectoagil.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,7 +13,7 @@ import jakarta.persistence.Table;
 public class Usuario {
 
     @Id
-    @Column(name = "idUser", length = 20)
+    @Column(name = "id_user", length = 20)
     private String idUser;
 
     @Column(name = "user", nullable = false, length = 50)
@@ -37,8 +38,8 @@ public class Usuario {
     private String email;
 
     
-    @ManyToOne
-    @JoinColumn(name = "idRol", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_rol", referencedColumnName = "id_rol", nullable = false)
     private Rol rol;
 
     
