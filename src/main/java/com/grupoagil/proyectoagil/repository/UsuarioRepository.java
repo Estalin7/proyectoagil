@@ -9,4 +9,3 @@ import com.grupoagil.proyectoagil.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
     Optional<Usuario> findByUserAndPassword(String user, String password);
 }
-

@@ -29,23 +29,24 @@ public class UsuarioController {
 
     // Iniciar sesión
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> datosLogin) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> datosLogin) {
         String user = datosLogin.get("user");
         String password = datosLogin.get("password");
 
+        // Llamamos al servicio para verificar las credenciales
         Optional<Usuario> usuario = usuarioService.iniciarSesion(user, password);
 
-        Map<String, Object> respuesta = new HashMap<>();
+        Map<String, String> respuesta = new HashMap<>();
 
         if (usuario.isPresent()) {
+            // Si el usuario existe y la contraseña es correcta
             Usuario usuarioObj = usuario.get();
-            respuesta.put("exito", true);
             respuesta.put("mensaje", "Inicio de sesión exitoso. Bienvenido " + usuarioObj.getNombre());
         } else {
-            respuesta.put("exito", false);
+            // Si las credenciales son incorrectas
             respuesta.put("mensaje", "Credenciales inválidas");
         }
 
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(respuesta);  // Devolvemos la respuesta con el mensaje
     }
 }
