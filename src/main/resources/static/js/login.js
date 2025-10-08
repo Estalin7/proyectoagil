@@ -26,29 +26,23 @@ async function iniciarSesion() {
 
     // Depurar la respuesta del backend
     const data = await response.json();
-    console.log("Respuesta del backend:", data);  // Verificar la respuesta que se recibe
-
-    spinner.style.display = "none";  // Ocultar el spinner
+    spinner.style.display = "none";
+    console.log(data);
 
     // Verificar si la respuesta contiene un mensaje de éxito
-    if (data.mensaje) {
-      if (data.mensaje.includes("Bienvenido")) {
-        // Si la respuesta es exitosa, mostrar mensaje de éxito y redirigir
-        mostrarMensaje(data.mensaje, "success");
+    if (data.rol) {
+      // Guardamos el rol en localStorage
+      localStorage.setItem('rol', data.rol);
 
-        // Guardar los datos en localStorage
-        localStorage.setItem('nombre', user);
+      // Mostrar mensaje de éxito y redirigir al dashboard
+      mostrarMensaje(data.mensaje || "¡Inicio de sesión exitoso!", "success");
 
-        setTimeout(() => {
-          window.location.href = "dashboard.html";  // Redirigir al dashboard
-        }, 1200);
-      } else {
-        // Si la respuesta contiene un mensaje de error, mostrarlo
-        mostrarMensaje(data.mensaje, "error");
-      }
+      setTimeout(() => {
+        window.location.href = "dashboard.html";  // Redirigir al dashboard
+      }, 1200);
     } else {
-      // Si no hay mensaje, mostrar error genérico
-      mostrarMensaje("Ocurrió un error inesperado", "error");
+      // Si hay error, mostramos el mensaje de error
+      mostrarMensaje(data.mensaje || "Error en el login", "error");
     }
 
   } catch (error) {

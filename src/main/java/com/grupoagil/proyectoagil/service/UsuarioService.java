@@ -18,6 +18,11 @@ public class UsuarioService {
 
     // Método para validar inicio de sesión
     public Optional<Usuario> iniciarSesion(String user, String password) {
-        return usuarioRepository.findByUserAndPassword(user, password);
+        Optional<Usuario> usuario = usuarioRepository.findByUserAndPassword(user, password);
+
+        if (usuario.isPresent()) {
+            return usuario;  // Devuelve el usuario con su rol
+        }
+        return Optional.empty();
     }
 }

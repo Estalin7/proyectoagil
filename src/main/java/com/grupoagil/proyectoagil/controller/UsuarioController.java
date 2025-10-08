@@ -41,6 +41,7 @@ public class UsuarioController {
         if (usuario.isPresent()) {
             // Si el usuario existe y la contraseña es correcta
             Usuario usuarioObj = usuario.get();
+            respuesta.put("rol", usuarioObj.getRol().getRol());
             respuesta.put("mensaje", "Inicio de sesión exitoso. Bienvenido " + usuarioObj.getNombre());
         } else {
             // Si las credenciales son incorrectas
