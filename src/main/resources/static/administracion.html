@@ -172,7 +172,11 @@
             <td><strong>${item.nombre}</strong></td>
             <td>${item.categoria.nombre}</td>
             <td>S/ ${item.precio.toFixed(2)}</td>
-            <td><span class="badge badge-${item.disponible ? 'disponible' : 'agotado'}">${item.disponible ? 'Disponible' : 'Agotado'}</span></td>
+            <td>
+              <span class="badge badge-${item.cantidad > 0 ? 'disponible' : 'agotado'}">
+                ${item.cantidad > 0 ? 'Disponible' : 'Agotado'}
+              </span>
+            </td>
             <td><button class="btn-action btn-edit" onclick="editMenuItem('${item.nombre}')">✏ Editar</button></td>
           </tr>
         `).join("");

@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grupoagil.proyectoagil.model.Inventario;
 import com.grupoagil.proyectoagil.model.Producto;
 import com.grupoagil.proyectoagil.service.ProductoService;
+import com.grupoagil.proyectoagil.service.ProductoService.ProductoResponse;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -30,7 +32,7 @@ public class ProductoController {
      * Obtener todos los productos
      */
     @GetMapping
-    public List<Producto> getAllProductos() {
+    public List<ProductoResponse> getAllProductos() {
         return productoService.getAllProductos();
     }
 
@@ -47,7 +49,6 @@ public class ProductoController {
             Integer cantidadDisponible = Integer.valueOf(request.get("cantidadDisponible").toString());
 
             Producto producto = productoService.createProducto(nombre, categoria, precio, descripcion, cantidadDisponible);
-
             return ResponseEntity.ok(producto);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -92,7 +93,10 @@ public class ProductoController {
         Optional<Producto> productoOpt = productoService.findByNombre(nombre);
 
         if (productoOpt.isPresent()) {
-            return ResponseEntity.ok(productoOpt.get());
+            Producto p = productoOpt.get();
+            Inventario inv = productoService.getInventario(p.getIdProducto());
+            ProductoResponse resp = new ProductoResponse(p, inv.getCantDispo());
+            return ResponseEntity.ok(resp);
         } else {
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Producto no encontrado"));
