@@ -3,250 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Administración - Sistema de Pedidos</title>
+  <title>Administración - Sistema de Restaurante</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f5f7fa; min-height: 100vh; }
 
-    body {
-      background-color: #f5f7fa;
-      min-height: 100vh;
-    }
+    .header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);}
+    .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
+    .header h1 { font-size: 1.5rem; font-weight: 600; }
+    .btn-back { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.3s;}
+    .btn-back:hover { background: rgba(255,255,255,0.3); }
+    .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
 
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      color: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; background: white; padding: 0.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+    .tab { flex: 1; padding: 1rem; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; color: #666;}
+    .tab:hover { background: #f8f9fa; }
+    .tab.active { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .header-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .panel { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .panel-header h2 { color: #2c3e50; font-size: 1.3rem; }
+    .btn-primary { padding: 0.7rem 1.5rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.3s;}
+    .btn-primary:hover { opacity: 0.9; }
 
-    .header h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f8f9fa; padding: 1rem; text-align: left; font-weight: 600; color: #2c3e50; border-bottom: 2px solid #e0e0e0; }
+    td { padding: 1rem; border-bottom: 1px solid #f0f0f0; color: #34495e; }
+    tr:hover { background: #f8f9fa; }
 
-    .btn-back {
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.3s;
-    }
-
-    .btn-back:hover {
-      background: rgba(255,255,255,0.3);
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 2rem;
-    }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      background: white;
-      padding: 0.5rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .tab {
-      flex: 1;
-      padding: 1rem;
-      background: transparent;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-      color: #666;
-    }
-
-    .tab:hover {
-      background: #f8f9fa;
-    }
-
-    .tab.active {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      color: white;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Panel */
-    .panel {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-
-    .panel-header h2 {
-      color: #2c3e50;
-      font-size: 1.3rem;
-    }
-
-    .btn-primary {
-      padding: 0.7rem 1.5rem;
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.3s;
-    }
-
-    .btn-primary:hover {
-      opacity: 0.9;
-    }
-
-    /* Tabla de Productos */
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th {
-      background: #f8f9fa;
-      padding: 1rem;
-      text-align: left;
-      font-weight: 600;
-      color: #2c3e50;
-      border-bottom: 2px solid #e0e0e0;
-    }
-
-    td {
-      padding: 1rem;
-      border-bottom: 1px solid #f0f0f0;
-      color: #34495e;
-    }
-
-    tr:hover {
-      background: #f8f9fa;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.3rem 0.7rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .badge-activo { background: #d4edda; color: #155724; }
-    .badge-inactivo { background: #f8d7da; color: #721c24; }
+    .badge { display: inline-block; padding: 0.3rem 0.7rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; }
     .badge-disponible { background: #d1ecf1; color: #0c5460; }
     .badge-agotado { background: #fff3cd; color: #856404; }
 
-    .btn-action {
-      padding: 0.4rem 0.8rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin: 0 0.25rem;
-      transition: opacity 0.3s;
-    }
+    .btn-action { padding: 0.4rem 0.8rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 500; margin: 0 0.25rem; transition: opacity 0.3s; }
+    .btn-edit { background: #3498db; color: white; }
+    .btn-action:hover { opacity: 0.8; }
 
-    .btn-action:hover {
-      opacity: 0.8;
-    }
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-header h3 { color: #2c3e50; font-size: 1.3rem; }
+    .btn-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; color: #34495e; font-weight: 500; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.7rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; transition: border-color 0.3s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #f093fb; }
+    .form-actions { display: flex; gap: 0.5rem; margin-top: 1.5rem; }
+    .btn-secondary { flex: 1; padding: 0.7rem; background: #95a5a6; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-submit { flex: 1; padding: 0.7rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
-    .btn-edit {
-      background: #3498db;
-      color: white;
-    }
-
-    .btn-delete {
-      background: #e74c3c;
-      color: white;
+    @media (max-width: 768px) {
+      .tabs { flex-direction: column; }
     }
   </style>
 </head>
 <body>
   <div class="header">
     <div class="header-content">
-      <h1>⚙️ Panel de Administración</h1>
+      <h1>⚙ Panel de Administración</h1>
       <a href="dashboard.html" class="btn-back">← Volver</a>
     </div>
   </div>
 
   <div class="container">
-    <!-- Tabs -->
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('usuarios')">👥 Usuarios</button>
-      <button class="tab" onclick="switchTab('menu')">🍽️ Menú</button>
-    </div>
-
-    <!-- Tab: Usuarios -->
-    <div id="tabUsuarios" class="tab-content active">
-      <div class="panel">
-        <div class="panel-header">
-          <h2>Gestionar Usuarios</h2>
-          <button class="btn-primary" onclick="openUserModal()">➕ Nuevo Usuario</button>
-        </div>
-
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Usuario</th>
-                <th>Nombre</th>
-                <th>Rol</th>
-                <th>Email</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="usersTable">
-              <!-- Los usuarios se cargarán aquí -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <button class="tab active" onclick="switchTab('menu')">🍽 Menú</button>
     </div>
 
     <!-- Tab: Menú -->
-    <div id="tabMenu" class="tab-content">
+    <div id="tabMenu" class="tab-content active">
       <div class="panel">
         <div class="panel-header">
           <h2>Gestión del Menú</h2>
@@ -265,37 +94,73 @@
               </tr>
             </thead>
             <tbody id="menuTable">
-              <!-- Los platillos se cargarán aquí -->
+              <!-- Los platillos se cargarán dinámicamente desde backend -->
             </tbody>
           </table>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Modal para crear/editar platillo -->
+  <div id="menuModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="menuModalTitle">Nuevo Platillo</h3>
+        <button class="btn-close" onclick="closeMenuModal()">×</button>
+      </div>
+
+      <form id="menuForm" onsubmit="saveMenuItem(event)">
+        <div class="form-group">
+          <label>Nombre del Platillo</label>
+          <input type="text" name="nombre" required>
+        </div>
+
+        <div class="form-group">
+          <label>Categoría</label>
+          <select name="categoria" required>
+            <option value="" disabled selected>Seleccione una categoría</option>
+            <option value="entradas">Entradas</option>
+            <option value="platos principales">Platos Principales</option>
+            <option value="postres">Postres</option>
+            <option value="bebidas">Bebidas</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Precio (S/)</label>
+          <input type="number" name="precio" step="0.01" min="0" required>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea name="descripcion" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Cantidad Disponible</label>
+          <input type="number" name="cantidad" min="0" value="0" required>
+        </div>
+
+        <div class="form-group">
+          <label>Estado</label>
+          <select name="disponible" required>
+            <option value="true">Disponible</option>
+            <option value="false">Agotado</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeMenuModal()">Cancelar</button>
+          <button type="submit" class="btn-submit">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
-    // Función para cargar los usuarios
-    async function loadUsers() {
-      try {
-        const response = await fetch("http://localhost:8082/api/usuarios");
-        const users = await response.json();
-        const tableBody = document.getElementById("usersTable");
+    let editingMenuId = null;
 
-        tableBody.innerHTML = users.map(user => `
-          <tr>
-            <td><strong>${user.user}</strong></td>
-            <td>${user.nombre} ${user.apellido}</td>
-            <td><span class="badge">${user.rol}</span></td>
-            <td>${user.email}</td>
-            <td><span class="badge badge-${user.estado}">${user.estado}</span></td>
-            <td><button class="btn-action btn-edit" onclick="editUser(${user.id})">✏️ Editar</button></td>
-          </tr>
-        `).join("");
-      } catch (error) {
-        console.error("Error al cargar los usuarios:", error);
-      }
-    }
-
-    // Función para cargar los productos (menú)
     async function loadMenu() {
       try {
         const response = await fetch("http://localhost:8082/api/productos");
@@ -305,10 +170,10 @@
         tableBody.innerHTML = menu.map(item => `
           <tr>
             <td><strong>${item.nombre}</strong></td>
-            <td>${item.categoria}</td>
-            <td>S/ ${item.precio}</td>
+            <td>${item.categoria.nombre}</td>
+            <td>S/ ${item.precio.toFixed(2)}</td>
             <td><span class="badge badge-${item.disponible ? 'disponible' : 'agotado'}">${item.disponible ? 'Disponible' : 'Agotado'}</span></td>
-            <td><button class="btn-action btn-edit" onclick="editMenuItem(${item.id})">✏️ Editar</button></td>
+            <td><button class="btn-action btn-edit" onclick="editMenuItem('${item.nombre}')">✏ Editar</button></td>
           </tr>
         `).join("");
       } catch (error) {
@@ -316,13 +181,96 @@
       }
     }
 
-    // Llamamos a las funciones para cargar usuarios y productos
-    window.onload = function() {
-      loadUsers();
-      loadMenu();
-    };
+    function openMenuModal() {
+      editingMenuId = null;
+      document.getElementById('menuModalTitle').textContent = 'Nuevo Platillo';
+      document.getElementById('menuForm').reset();
+      document.getElementById('menuModal').classList.add('active');
+    }
 
+    function closeMenuModal() {
+      document.getElementById('menuModal').classList.remove('active');
+    }
+
+    async function editMenuItem(nombreExistente) {
+      try {
+        const response = await fetch(`http://localhost:8082/api/productos/buscar/${encodeURIComponent(nombreExistente)}`);
+        if (!response.ok) {
+          alert("No se encontró el producto");
+          return;
+        }
+        const producto = await response.json();
+        editingMenuId = producto.nombre;
+
+        const form = document.getElementById('menuForm');
+        form.nombre.value = producto.nombre;
+        form.categoria.value = producto.categoria.nombre;
+        form.precio.value = producto.precio;
+        form.descripcion.value = producto.descripcion;
+        form.cantidad.value = producto.inventario?.cantDispo || 0;
+        form.disponible.value = producto.disponible;
+
+        document.getElementById('menuModalTitle').textContent = `Editar Platillo: ${producto.nombre}`;
+        document.getElementById('menuModal').classList.add('active');
+      } catch (error) {
+        console.error("Error al cargar el producto:", error);
+      }
+    }
+
+    async function saveMenuItem(event) {
+      event.preventDefault();
+      const form = event.target;
+      const formData = new FormData(form);
+      const productoData = {
+        nombre: formData.get('nombre'),
+        categoria: formData.get('categoria'),
+        precio: parseFloat(formData.get('precio')),
+        descripcion: formData.get('descripcion'),
+        cantidadDisponible: parseInt(formData.get('cantidad')),
+        disponible: formData.get('disponible') === 'true'
+      };
+
+      try {
+        let response;
+        if (editingMenuId) {
+          response = await fetch(`http://localhost:8082/api/productos/editar/${encodeURIComponent(editingMenuId)}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(productoData)
+          });
+        } else {
+          response = await fetch("http://localhost:8082/api/productos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(productoData)
+          });
+        }
+
+        if (response.ok) {
+          alert(editingMenuId ? "Platillo actualizado exitosamente" : "Platillo creado exitosamente");
+          loadMenu();
+          closeMenuModal();
+        } else {
+          const err = await response.json();
+          alert("Error: " + (err.error || "No se pudo guardar el platillo"));
+        }
+      } catch (error) {
+        console.error("Error al guardar el platillo:", error);
+      }
+    }
+
+    window.onload = loadMenu;
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(`tab${capitalize(tabName)}`).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
   </script>
-
 </body>
 </html>

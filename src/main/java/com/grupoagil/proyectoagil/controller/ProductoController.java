@@ -1,10 +1,12 @@
 package com.grupoagil.proyectoagil.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,47 +18,84 @@ import org.springframework.web.bind.annotation.RestController;
 import com.grupoagil.proyectoagil.model.Producto;
 import com.grupoagil.proyectoagil.service.ProductoService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
 
-    private final ProductoService productoService;
-
     @Autowired
-    public ProductoController(ProductoService productoService) {
-        this.productoService = productoService;
-    }
+    private ProductoService productoService;
 
-    // Obtener todos los productos
+    /** 
+     * Obtener todos los productos
+     */
     @GetMapping
-    public ResponseEntity<List<Producto>> getAllProductos() {
-        List<Producto> productos = productoService.getAllProductos();
-        return ResponseEntity.ok(productos);
+    public List<Producto> getAllProductos() {
+        return productoService.getAllProductos();
     }
 
-    // Crear un nuevo producto
+    /**
+     * Crear un nuevo producto
+     */
     @PostMapping
-    public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
-        Producto nuevoProducto = productoService.createProducto(producto);
-        return ResponseEntity.status(201).body(nuevoProducto); // Retorna el producto creado con código 201
+    public ResponseEntity<?> createProducto(@RequestBody Map<String, Object> request) {
+        try {
+            String nombre = (String) request.get("nombre");
+            String categoria = (String) request.get("categoria");
+            Double precio = Double.valueOf(request.get("precio").toString());
+            String descripcion = (String) request.get("descripcion");
+            Integer cantidadDisponible = Integer.valueOf(request.get("cantidadDisponible").toString());
+
+            Producto producto = productoService.createProducto(nombre, categoria, precio, descripcion, cantidadDisponible);
+
+            return ResponseEntity.ok(producto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
-    // Eliminar un producto por su ID
-    @DeleteMapping("/{idProducto}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Long idProducto) {
-        productoService.deleteProducto(idProducto);
-        return ResponseEntity.noContent().build(); // 204 No Content
+    /**
+     * Editar un producto por su nombre
+     */
+    @PutMapping("/editar/{nombreExistente}")
+    public ResponseEntity<?> editProducto(
+            @PathVariable String nombreExistente,
+            @RequestBody Map<String, Object> request) {
+        try {
+            String nuevoNombre = (String) request.get("nombre");
+            String categoria = (String) request.get("categoria");
+            Double precio = Double.valueOf(request.get("precio").toString());
+            String descripcion = (String) request.get("descripcion");
+            Integer cantidadDisponible = Integer.valueOf(request.get("cantidadDisponible").toString());
+
+            Producto productoActualizado = productoService.editProducto(
+                    nombreExistente,
+                    nuevoNombre,
+                    categoria,
+                    precio,
+                    descripcion,
+                    cantidadDisponible
+            );
+
+            return ResponseEntity.ok(productoActualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
-    // Actualizar un producto por su nombre
-    @PutMapping("/{nombre}")
-    public ResponseEntity<Producto> updateProducto(@PathVariable String nombre, @RequestBody Producto productoActualizado) {
-        Producto producto = productoService.updateProductoByNombre(nombre, productoActualizado);
-        
-        if (producto != null) {
-            return ResponseEntity.ok(producto); // Si se encuentra y actualiza el producto
+    /**
+     * Buscar un producto por su nombre
+     */
+    
+    @GetMapping("/buscar/{nombre}")
+    public ResponseEntity<?> buscarProducto(@PathVariable String nombre) {
+        Optional<Producto> productoOpt = productoService.findByNombre(nombre);
+
+        if (productoOpt.isPresent()) {
+            return ResponseEntity.ok(productoOpt.get());
         } else {
-            return ResponseEntity.notFound().build(); // Si no se encuentra el producto
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Producto no encontrado"));
         }
     }
 }

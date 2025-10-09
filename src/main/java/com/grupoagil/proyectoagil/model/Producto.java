@@ -13,10 +13,10 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "producto")
 public class Producto {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_producto", length= 20)
+    @Column(name = "id_producto")
     private Long idProducto;
 
     @Column(name = "nombre", nullable = false, length = 100)
@@ -28,50 +28,59 @@ public class Producto {
     @Column(name = "descripcion", length = 255)
     private String descripcion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", nullable = false)
     private Categoria categoria;
 
-
+    // Constructor vacío
     public Producto() {}
 
+    // Constructor con parámetros
     public Producto(Long idProducto, String nombre, Double precio, String descripcion, Categoria categoria) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.precio = precio;
         this.descripcion = descripcion;
         this.categoria = categoria;
-
     }
-    // Getters and Setters
+
+    // Getters y Setters
     public Long getIdProducto() {
         return idProducto;
     }
+
     public void setIdProducto(Long idProducto) {
         this.idProducto = idProducto;
     }
-    
+
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     public Double getPrecio() {
         return precio;
     }
+
     public void setPrecio(Double precio) {
         this.precio = precio;
     }
+
     public String getDescripcion() {
         return descripcion;
     }
+
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
     public Categoria getCategoria() {
         return categoria;
     }
+
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }

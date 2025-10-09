@@ -3,40 +3,56 @@ package com.grupoagil.proyectoagil.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "inventario")
-public class Inventario{
+public class Inventario {
 
-    @Column(name = "cantDipo", length=3)
-    private Long idInventario;
+    @Id
+    @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")
+    private Long idProducto;  // Relación con Producto
 
-    @Column(name = "cantidad", nullable = false)
-    private Integer cantidad;
+    @Column(name = "cant_dispo", nullable = false)
+    private Integer cantDispo;  // Cantidad disponible
 
+    @OneToOne
+    @JoinColumn(name = "id_producto", insertable = false, updatable = false)
+    private Producto producto;
+
+    // Constructor vacío
     public Inventario() {}
-    public Inventario(Long idInventario, Integer cantidad) {
-        this.idInventario = idInventario;
-        this.cantidad = cantidad;
-    }
-    // Getters and Setters
 
-    public Long getIdInventario() {
-        return idInventario;
+    // Constructor con parámetros
+    public Inventario(Long idProducto, Integer cantDispo) {
+        this.idProducto = idProducto;
+        this.cantDispo = cantDispo;
     }
 
-    public void setIdInventario(Long idInventario) {
-        this.idInventario = idInventario;
+    // Getters y Setters
+    public Long getIdProducto() {
+        return idProducto;
     }
 
-    public Integer getCantidad() {
-        return cantidad;
+    public void setIdProducto(Long idProducto) {
+        this.idProducto = idProducto;
     }
 
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
+    public Integer getCantDispo() {
+        return cantDispo;
     }
 
+    public void setCantDispo(Integer cantDispo) {
+        this.cantDispo = cantDispo;
+    }
 
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
 }
