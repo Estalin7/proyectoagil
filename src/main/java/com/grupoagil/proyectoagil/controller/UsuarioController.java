@@ -1,12 +1,14 @@
 package com.grupoagil.proyectoagil.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,4 +52,17 @@ public class UsuarioController {
 
         return ResponseEntity.ok(respuesta);  // Devolvemos la respuesta con el mensaje
     }
+
+    @GetMapping
+    public ResponseEntity<List<Usuario>> getAllUsuarios() {
+        List<Usuario> usuarios = usuarioService.getAllUsuarios();
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @PostMapping
+    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
+        Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
+        return ResponseEntity.status(201).body(nuevoUsuario); // Retorna el usuario creado con código 201
+    }
+
 }

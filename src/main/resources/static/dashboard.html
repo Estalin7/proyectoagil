@@ -162,7 +162,7 @@
   <!-- Header -->
   <div class="header">
     <div class="header-content">
-      <h1>🍽️ Sistema de Restaurante</h1>
+      <h1>🍽 Sistema de Restaurante</h1>
       <div class="user-info">
         <span class="rol-badge" id="rolBadge"></span>
         <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
@@ -197,7 +197,7 @@
 
       // Mostrar el nombre del usuario en el dashboard
       document.getElementById('rolBadge').textContent = capitalizeFirst(rol);
-      document.getElementById('rolBadge').className = `rol-badge rol-${rol}`;
+      document.getElementById('rolBadge').className = 'rol-badge rol-${rol}';
 
       // Mostrar las opciones según el rol
       const optionsDiv = document.getElementById('cardsGrid');
@@ -224,8 +224,8 @@
             <h3>Pagos</h3>
             <p>Registrar pagos de clientes</p>
           </a>
-          <a href="admin.html" class="card">
-            <div class="card-icon orange">⚙️</div>
+          <a href="administracion.html" class="card">
+            <div class="card-icon orange">⚙</div>
             <h3>Administración</h3>
             <p>Gestionar usuarios, mesas, plato y bebidas, etc</p>
           </a>
@@ -255,8 +255,8 @@
             <h3>Ver Pedidos</h3>
             <p>Ver pedidos en preparación</p>
           </a>
-          <a href="admin.html" class="card">
-            <div class="card-icon orange">⚙️</div>
+          <a href="administracion.html" class="card">
+            <div class="card-icon orange">⚙</div>
             <h3>Administración</h3>
             <p>Gestionar usuarios, mesas, plato y bebidas, etc</p>
           </a>
@@ -288,67 +288,8 @@
         localStorage.clear();  // Limpiar localStorage
         window.location.href = 'login.html';  // Redirigir al login
       }
+      
     }
   </script>
 </body>
 </html>
-=======
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - Sistema de Pedidos</title>
-</head>
-<body>
-  <h1>Bienvenido al Sistema de Restaurante</h1>
-  <p id="userName"></p>
-  <div id="options"></div>
-
-  <script>
-    window.onload = function() {
-      const rol = localStorage.getItem('rol');
-      const nombre = localStorage.getItem('nombre');
-
-      // Verificar si el usuario está autenticado
-      if (!rol || !nombre) {
-        alert("Debes iniciar sesión primero.");
-        window.location.href = 'login.html';  // Redirige a login si no hay rol o nombre
-        return;
-      }
-
-      // Mostrar el nombre del usuario en el dashboard
-      document.getElementById('userName').textContent = `Bienvenido, ${nombre}`;
-
-      // Mostrar las opciones según el rol
-      const optionsDiv = document.getElementById('options');
-      
-      if (rol === 'admin') {
-        optionsDiv.innerHTML = `
-          <button>Gestionar Usuarios</button>
-          <button>Ver Reportes</button>
-          <button>Ver Menú</button>
-        `;
-      } else if (rol === 'mesero') {
-        optionsDiv.innerHTML = `
-          <button>Tomar Pedido</button>
-          <button>Ver Menú</button>
-        `;
-      } else if (rol === 'cocinero') {
-        optionsDiv.innerHTML = `
-          <button>Ver Pedidos</button>
-          <button>Marcar Pedido Como Listo</button>
-        `;
-      } else if (rol === 'cajero') {
-        optionsDiv.innerHTML = `
-          <button>Ver Pedidos Pagados</button>
-          <button>Realizar Pagos</button>
-        `;
-      } else {
-        optionsDiv.innerHTML = '<p>Rol no reconocido.</p>';
-      }
-    };
-  </script>
-</body>
-</html>
-
