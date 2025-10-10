@@ -18,7 +18,11 @@ async function iniciarSesion() {
 
   try {
     // Solicitar datos al backend
-    const response = await fetch("http://localhost:8082/api/usuarios/login", {
+    const response = await const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8082'
+  : 'https://proyectoagil.onrender.com';
+
+fetch(`${API_URL}/api/usuarios/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user, password })
