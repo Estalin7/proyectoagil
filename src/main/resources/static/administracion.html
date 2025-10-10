@@ -106,13 +106,13 @@
   <div id="menuModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="menuModalTitle">Nuevo Platillo</h3>
+        <h3 id="menuModalTitle">Nuevo Producto</h3>
         <button class="btn-close" onclick="closeMenuModal()">×</button>
       </div>
 
       <form id="menuForm" onsubmit="saveMenuItem(event)">
         <div class="form-group">
-          <label>Nombre del Platillo</label>
+          <label>Nombre del Producto</label>
           <input type="text" name="nombre" required>
         </div>
 
@@ -225,6 +225,8 @@
       event.preventDefault();
       const form = event.target;
       const formData = new FormData(form);
+      
+
       const productoData = {
         nombre: formData.get('nombre'),
         categoria: formData.get('categoria'),
@@ -251,12 +253,12 @@
         }
 
         if (response.ok) {
-          alert(editingMenuId ? "Platillo actualizado exitosamente" : "Platillo creado exitosamente");
+          alert(editingMenuId ? "Producto actualizado exitosamente" : "Producto creado exitosamente");
           loadMenu();
           closeMenuModal();
         } else {
           const err = await response.json();
-          alert("Error: " + (err.error || "No se pudo guardar el platillo"));
+          alert("Error: " + (err.error || "No se pudo guardar el Producto"));
         }
       } catch (error) {
         console.error("Error al guardar el platillo:", error);

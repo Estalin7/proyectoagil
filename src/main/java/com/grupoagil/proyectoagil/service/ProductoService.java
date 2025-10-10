@@ -52,6 +52,7 @@ public class ProductoService {
     
     public Producto createProducto(String nombre, String categoriaNombre, Double precio,
                                    String descripcion, Integer cantidadDisponible) {
+        
 
         Categoria categoria = categoriaRepository.findAll().stream()
                 .filter(c -> c.getNombre().equalsIgnoreCase(categoriaNombre))
@@ -78,7 +79,7 @@ public class ProductoService {
     public Producto editProducto(String nombreExistente, String nuevoNombre, String categoriaNombre, Double precio, String descripcion, Integer cantidadDisponible) {
          Producto producto = findByNombre(nombreExistente)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + nombreExistente));
-        
+
         producto.setNombre(nuevoNombre);
         producto.setPrecio(precio);
         producto.setDescripcion(descripcion);
