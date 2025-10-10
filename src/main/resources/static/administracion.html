@@ -42,6 +42,19 @@
     .btn-edit { background: #3498db; color: white; }
     .btn-action:hover { opacity: 0.8; }
 
+    .table-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .table-card { background: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; border-left: 5px solid #27ae60; transition: transform 0.3s, box-shadow 0.3s; }
+    .table-card.inactive { border-left-color: #e74c3c; }
+    .table-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+    .table-card-header { display: flex; justify-content: space-between; align-items: center; }
+    .table-card-header h3 { font-size: 1.8rem; color: #2c3e50; }
+    .table-status { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: #ffffff; }
+    .status-disponible { background-color: #27ae60; }
+    .status-inactiva { background-color: #e74c3c; }
+    .table-card-body { min-height: 20px; }
+    .table-card-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
+    .table-card-footer .btn { padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+
     .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
     .modal.active { display: flex; }
     .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
@@ -56,62 +69,17 @@
     .btn-secondary { flex: 1; padding: 0.7rem; background: #95a5a6; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
     .btn-submit { flex: 1; padding: 0.7rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
-    /* Estilos para la subida de fotos */
-    .photo-upload-container { 
-      border: 2px dashed #e0e0e0; 
-      border-radius: 8px; 
-      padding: 1.5rem; 
-      text-align: center; 
-      cursor: pointer; 
-      transition: all 0.3s;
-      background: #f8f9fa;
-    }
-    .photo-upload-container:hover { 
-      border-color: #f093fb; 
-      background: #fff;
-    }
-    .photo-upload-container.has-image {
-      border-style: solid;
-      border-color: #f093fb;
-    }
-    .photo-preview { 
-      max-width: 100%; 
-      max-height: 200px; 
-      border-radius: 8px; 
-      margin-top: 1rem;
-      display: none;
-    }
-    .photo-preview.show {
-      display: block;
-    }
-    .upload-icon { 
-      font-size: 3rem; 
-      color: #bbb; 
-      margin-bottom: 0.5rem;
-    }
-    .upload-text { 
-      color: #666; 
-      font-size: 0.9rem;
-    }
-    .photo-actions {
-      margin-top: 1rem;
-      display: none;
-    }
-    .photo-actions.show {
-      display: block;
-    }
-    .btn-remove-photo {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-    .btn-remove-photo:hover {
-      opacity: 0.8;
-    }
+    .photo-upload-container { border: 2px dashed #e0e0e0; border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s; background: #f8f9fa; }
+    .photo-upload-container:hover { border-color: #f093fb; background: #fff; }
+    .photo-upload-container.has-image { border-style: solid; border-color: #f093fb; }
+    .photo-preview { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 1rem; display: none; }
+    .photo-preview.show { display: block; }
+    .upload-icon { font-size: 3rem; color: #bbb; margin-bottom: 0.5rem; }
+    .upload-text { color: #666; font-size: 0.9rem; }
+    .photo-actions { margin-top: 1rem; display: none; }
+    .photo-actions.show { display: block; }
+    .btn-remove-photo { background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+    .btn-remove-photo:hover { opacity: 0.8; }
 
     @media (max-width: 768px) {
       .tabs { flex-direction: column; }
@@ -128,45 +96,46 @@
 
   <div class="container">
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('menu')">🍽 Menú</button>
+      <button class="tab active" onclick="switchTab('Menu', event)">🍽 Menú</button>
+      <button class="tab" onclick="switchTab('Mesas', event)">🪑 Mesas</button>
     </div>
 
-    <!-- Tab: Menú -->
     <div id="tabMenu" class="tab-content active">
       <div class="panel">
         <div class="panel-header">
           <h2>Gestión del Menú</h2>
           <button class="btn-primary" onclick="openMenuModal()">➕ Nuevo Platillo</button>
         </div>
-
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>Platillo</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Estado</th>
-                <th>Acciones</th>
+                <th>Platillo</th><th>Categoría</th><th>Precio</th><th>Estado</th><th>Acciones</th>
               </tr>
             </thead>
-            <tbody id="menuTable">
-              <!-- Los platillos se cargarán dinámicamente desde backend -->
-            </tbody>
+            <tbody id="menuTable"></tbody>
           </table>
         </div>
       </div>
     </div>
+
+    <div id="tabMesas" class="tab-content">
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Gestión de Mesas</h2>
+                <button class="btn-primary" onclick="openMesaModal()">➕ Nueva Mesa</button>
+            </div>
+            <div class="table-grid" id="tableGrid"></div>
+        </div>
+    </div>
   </div>
 
-  <!-- Modal para crear/editar platillo -->
   <div id="menuModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="menuModalTitle">Nuevo Platillo</h3>
         <button class="btn-close" onclick="closeMenuModal()">×</button>
       </div>
-
       <form id="menuForm" onsubmit="saveMenuItem(event)">
         <div class="form-group">
           <label>Foto del Platillo</label>
@@ -183,38 +152,20 @@
             <button type="button" class="btn-remove-photo" onclick="removePhoto(event)">🗑 Eliminar foto</button>
           </div>
         </div>
-
-        <div class="form-group">
-          <label>Nombre del Platillo</label>
-          <input type="text" name="nombre" required>
-        </div>
-
+        <div class="form-group"> <label>Nombre</label> <input type="text" name="nombre" required> </div>
         <div class="form-group">
           <label>Categoría</label>
           <select name="categoria" required>
-            <option value="" disabled selected>Seleccione una categoría</option>
+            <option value="" disabled selected>Seleccione</option>
             <option value="entradas">Entradas</option>
             <option value="platos principales">Platos Principales</option>
             <option value="postres">Postres</option>
             <option value="bebidas">Bebidas</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label>Precio (S/)</label>
-          <input type="number" name="precio" step="0.01" min="0" required>
-        </div>
-
-        <div class="form-group">
-          <label>Descripción</label>
-          <textarea name="descripcion" rows="3" required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Cantidad Disponible</label>
-          <input type="number" name="cantidad" min="0" value="0" required>
-        </div>
-
+        <div class="form-group"> <label>Precio (S/)</label> <input type="number" name="precio" step="0.01" min="0" required> </div>
+        <div class="form-group"> <label>Descripción</label> <textarea name="descripcion" rows="3" required></textarea> </div>
+        <div class="form-group"> <label>Cantidad</label> <input type="number" name="cantidad" min="0" value="0" required> </div>
         <div class="form-group">
           <label>Estado</label>
           <select name="disponible" required>
@@ -222,7 +173,6 @@
             <option value="false">Agotado</option>
           </select>
         </div>
-
         <div class="form-actions">
           <button type="button" class="btn-secondary" onclick="closeMenuModal()">Cancelar</button>
           <button type="submit" class="btn-submit">Guardar</button>
@@ -231,17 +181,47 @@
     </div>
   </div>
 
+  <div id="mesaModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="mesaModalTitle">Nueva Mesa</h3>
+        <button class="btn-close" onclick="closeMesaModal()">×</button>
+      </div>
+      <form id="mesaForm" onsubmit="saveMesa(event)">
+        <div class="form-group">
+          <label for="mesaNumber">Número de Mesa (ID)</label>
+          <input type="number" id="mesaNumber" required min="0">
+        </div>
+        <div class="form-group">
+          <label for="mesaState">Estado</label>
+          <select id="mesaState" required>
+            <option value="Disponible">Disponible</option>
+            <option value="Inactiva">Inactiva</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeMesaModal()">Cancelar</button>
+          <button type="submit" class="btn-submit">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 <script>
+    // --- ESTADO GLOBAL Y CONFIGURACIÓN ---
+    const API_BASE_URL = "http://localhost:8082";
     let editingMenuId = null;
     let selectedPhotoFile = null;
-    let menuItems = []; // <<< NUEVO: Variable para guardar el estado del menú
+    let menuItems = []; 
+    let tables = []; // Almacenará las mesas traídas de la API
+    let editingMesaId = null;
 
+    // --- GESTIÓN DE MENÚ (CONECTADO AL BACKEND) ---
     async function loadMenu() {
       try {
-        const response = await fetch("http://localhost:8082/api/productos");
-        menuItems = await response.json(); // <<< MODIFICADO: Guardamos los datos aquí
+        const response = await fetch(`${API_BASE_URL}/api/productos`);
+        menuItems = await response.json();
         const tableBody = document.getElementById("menuTable");
-
         tableBody.innerHTML = menuItems.map(item => `
           <tr>
             <td><strong>${item.nombre}</strong></td>
@@ -257,79 +237,50 @@
         `).join("");
       } catch (error) {
         console.error("Error al cargar el menú:", error);
+        alert("No se pudo cargar el menú. Revisa la consola para más detalles.");
       }
     }
 
-    // --- Las funciones handlePhotoSelect, removePhoto, openMenuModal, closeMenuModal y editMenuItem permanecen iguales ---
-    // (Se omiten por brevedad, no necesitas cambiarlas)
+    async function saveMenuItem(event) {
+      event.preventDefault();
+      const form = event.target;
+      const nombrePlatillo = form.nombre.value.trim();
+
+      const formData = new FormData();
+      if (selectedPhotoFile) formData.append('imagen', selectedPhotoFile);
+      formData.append('nombre', nombrePlatillo);
+      formData.append('categoria', form.categoria.value);
+      formData.append('precio', form.precio.value);
+      formData.append('descripcion', form.descripcion.value);
+      formData.append('cantidadDisponible', form.cantidad.value);
+
+      const url = editingMenuId 
+        ? `${API_BASE_URL}/api/productos/editar/${encodeURIComponent(editingMenuId)}`
+        : `${API_BASE_URL}/api/productos`;
+      
+      const method = editingMenuId ? "PUT" : "POST";
+
+      try {
+        const response = await fetch(url, { method, body: formData });
+        if (response.ok) {
+          alert(`Platillo ${editingMenuId ? 'actualizado' : 'creado'} exitosamente`);
+          loadMenu();
+          closeMenuModal();
+        } else {
+          const err = await response.json();
+          alert("Error: " + (err.error || "No se pudo guardar el platillo"));
+        }
+      } catch (error) {
+        console.error("Error al guardar el platillo:", error);
+        alert("Error al guardar. Verifica tu conexión con el servidor.");
+      }
+    }
     
-    function handlePhotoSelect(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      if (!file.type.startsWith('image/')) {
-        alert('Por favor selecciona un archivo de imagen válido');
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        alert('La imagen es muy grande. Por favor selecciona una imagen menor a 5MB');
-        return;
-      }
-
-      selectedPhotoFile = file;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const preview = document.getElementById('photoPreview');
-        const placeholder = document.getElementById('uploadPlaceholder');
-        const container = document.getElementById('photoUploadContainer');
-        const actions = document.getElementById('photoActions');
-        preview.src = e.target.result;
-        preview.classList.add('show');
-        placeholder.style.display = 'none';
-        container.classList.add('has-image');
-        actions.classList.add('show');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removePhoto(event) {
-      event.stopPropagation();
-      selectedPhotoFile = null;
-      const preview = document.getElementById('photoPreview');
-      const placeholder = document.getElementById('uploadPlaceholder');
-      const container = document.getElementById('photoUploadContainer');
-      const actions = document.getElementById('photoActions');
-      const input = document.getElementById('photoInput');
-      preview.src = '';
-      preview.classList.remove('show');
-      placeholder.style.display = 'block';
-      container.classList.remove('has-image');
-      actions.classList.remove('show');
-      input.value = '';
-    }
-
-    function openMenuModal() {
-      editingMenuId = null;
-      selectedPhotoFile = null;
-      document.getElementById('menuModalTitle').textContent = 'Nuevo Platillo';
-      document.getElementById('menuForm').reset();
-      removePhoto({ stopPropagation: () => {} });
-      document.getElementById('menuModal').classList.add('active');
-    }
-
-    function closeMenuModal() {
-      document.getElementById('menuModal').classList.remove('active');
-      removePhoto({ stopPropagation: () => {} });
-    }
-
+    // (Las funciones de menú auxiliares como editMenuItem, open/close modals y manejo de fotos no cambian)
     async function editMenuItem(nombreExistente) {
       try {
-        const response = await fetch(`http://localhost:8082/api/productos/buscar/${encodeURIComponent(nombreExistente)}`);
-        if (!response.ok) {
-          alert("No se encontró el producto");
-          return;
-        }
+        const response = await fetch(`${API_BASE_URL}/api/productos/buscar/${encodeURIComponent(nombreExistente)}`);
+        if (!response.ok) { alert("No se encontró el producto"); return; }
         const producto = await response.json();
         editingMenuId = producto.nombre;
         const form = document.getElementById('menuForm');
@@ -343,7 +294,7 @@
           const placeholder = document.getElementById('uploadPlaceholder');
           const container = document.getElementById('photoUploadContainer');
           const actions = document.getElementById('photoActions');
-          preview.src = `http://localhost:8082${producto.imagenUrl}`;
+          preview.src = `${API_BASE_URL}${producto.imagenUrl}`;
           preview.classList.add('show');
           placeholder.style.display = 'none';
           container.classList.add('has-image');
@@ -351,84 +302,156 @@
         }
         document.getElementById('menuModalTitle').textContent = `Editar Platillo: ${producto.nombre}`;
         document.getElementById('menuModal').classList.add('active');
+      } catch (error) { console.error("Error al cargar el producto:", error); }
+    }
+    function openMenuModal() {
+      editingMenuId = null;
+      selectedPhotoFile = null;
+      document.getElementById('menuModalTitle').textContent = 'Nuevo Platillo';
+      document.getElementById('menuForm').reset();
+      removePhoto({ stopPropagation: () => {} });
+      document.getElementById('menuModal').classList.add('active');
+    }
+    function closeMenuModal() {
+      document.getElementById('menuModal').classList.remove('active');
+      removePhoto({ stopPropagation: () => {} });
+    }
+    function handlePhotoSelect(event) {
+        const file = event.target.files[0];
+        if (!file || !file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) {
+            alert('Archivo no válido (debe ser imagen de < 5MB)'); return;
+        }
+        selectedPhotoFile = file;
+        const reader = new FileReader();
+        reader.onload = e => {
+            const preview = document.getElementById('photoPreview');
+            document.getElementById('uploadPlaceholder').style.display = 'none';
+            document.getElementById('photoUploadContainer').classList.add('has-image');
+            document.getElementById('photoActions').classList.add('show');
+            preview.src = e.target.result;
+            preview.classList.add('show');
+        };
+        reader.readAsDataURL(file);
+    }
+    function removePhoto(event) {
+        event.stopPropagation();
+        selectedPhotoFile = null;
+        document.getElementById('photoInput').value = '';
+        document.getElementById('photoPreview').src = '';
+        document.getElementById('photoPreview').classList.remove('show');
+        document.getElementById('uploadPlaceholder').style.display = 'block';
+        document.getElementById('photoUploadContainer').classList.remove('has-image');
+        document.getElementById('photoActions').classList.remove('show');
+    }
+
+    // --- GESTIÓN DE MESAS (CONECTADO AL BACKEND - MODIFICADO) ---
+    async function loadMesas() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/mesas`);
+        if (!response.ok) throw new Error('No se pudo obtener la lista de mesas.');
+        
+        tables = await response.json(); // Guardamos los datos en el array global
+        const tableGrid = document.getElementById('tableGrid');
+        tableGrid.innerHTML = tables.sort((a, b) => a.idMesa - b.idMesa).map(mesa => {
+            const statusClass = mesa.estado === 'Inactiva' ? 'status-inactiva' : 'status-disponible';
+            const cardClass = mesa.estado === 'Inactiva' ? 'inactive' : '';
+            return `
+            <div class="table-card ${cardClass}">
+                <div class="table-card-header">
+                    <h3>Mesa ${mesa.idMesa}</h3>
+                    <span class="table-status ${statusClass}">${mesa.estado}</span>
+                </div>
+                <div class="table-card-footer">
+                    <button class="btn-action btn-edit" onclick="openMesaModal(${mesa.idMesa})">✏️ Editar</button>
+                </div>
+            </div>
+            `;
+        }).join('');
       } catch (error) {
-        console.error("Error al cargar el producto:", error);
+        console.error("Error al cargar las mesas:", error);
+        alert("No se pudo conectar al servidor para cargar las mesas.");
       }
     }
 
-
-async function saveMenuItem(event) {
-  event.preventDefault();
-  const form = event.target;
-  const nombrePlatillo = form.nombre.value.trim();
-
-  // Validaciones solo al crear un nuevo platillo
-  if (!editingMenuId) {
-    // 1. Validar nombre duplicado (ya implementado)
-    const isDuplicate = menuItems.some(item => item.nombre.toLowerCase() === nombrePlatillo.toLowerCase());
-    if (isDuplicate) {
-      alert('Error: Ya existe un platillo con este nombre. Por favor, elige otro.');
-      return; // Detiene el envío del formulario
+    function openMesaModal(idMesa = null) {
+      const modal = document.getElementById('mesaModal');
+      const modalTitle = document.getElementById('mesaModalTitle');
+      const form = document.getElementById('mesaForm');
+      const numberInput = document.getElementById('mesaNumber');
+      form.reset();
+      
+      if (idMesa) { // Editando una mesa existente
+        const mesa = tables.find(t => t.idMesa === idMesa);
+        if (!mesa) return;
+        
+        editingMesaId = idMesa;
+        modalTitle.textContent = `Editar Mesa ${mesa.idMesa}`;
+        numberInput.value = mesa.idMesa;
+        numberInput.disabled = true; // El ID no se debe cambiar
+        document.getElementById('mesaState').value = mesa.estado;
+      } else { // Creando una nueva mesa
+        editingMesaId = null;
+        modalTitle.textContent = 'Crear Nueva Mesa';
+        numberInput.disabled = false;
+      }
+      modal.classList.add('active');
     }
 
-    // 2. Validar que la cantidad sea mayor a cero <<< ¡NUEVA VALIDACIÓN AQUÍ!
-    const cantidadInicial = parseInt(form.cantidad.value, 10);
-    if (cantidadInicial <= 0) {
-      alert('Error: La cantidad debe ser mayor que 0 para crear un nuevo platillo.');
-      return; // Detiene el envío del formulario
-    }
-  }
-
-  const formData = new FormData();
-  if (selectedPhotoFile) {
-    formData.append('imagen', selectedPhotoFile);
-  }
-  formData.append('nombre', nombrePlatillo);
-  formData.append('categoria', form.categoria.value);
-  formData.append('precio', form.precio.value);
-  formData.append('descripcion', form.descripcion.value);
-  formData.append('cantidadDisponible', form.cantidad.value);
-
-  try {
-    let response;
-    if (editingMenuId) {
-      response = await fetch(`http://localhost:8082/api/productos/editar/${encodeURIComponent(editingMenuId)}`, {
-        method: "PUT",
-        body: formData
-      });
-    } else {
-      response = await fetch("http://localhost:8082/api/productos", {
-        method: "POST",
-        body: formData
-      });
+    function closeMesaModal() {
+      document.getElementById('mesaModal').classList.remove('active');
     }
 
-    if (response.ok) {
-      alert(editingMenuId ? "Platillo actualizado exitosamente" : "Platillo creado exitosamente");
-      loadMenu();
-      closeMenuModal();
-    } else {
-      const err = await response.json();
-      alert("Error: " + (err.error || "No se pudo guardar el platillo"));
+    async function saveMesa(event) {
+        event.preventDefault();
+        const numeroMesa = parseInt(document.getElementById('mesaNumber').value);
+        const estadoMesa = document.getElementById('mesaState').value;
+        
+        const mesaData = {
+            idMesa: numeroMesa,
+            estado: estadoMesa
+        };
+
+        const isEditing = editingMesaId !== null;
+        const url = isEditing 
+            ? `${API_BASE_URL}/api/mesas/${editingMesaId}` 
+            : `${API_BASE_URL}/api/mesas`;
+        
+        const method = isEditing ? 'PUT' : 'POST';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(mesaData)
+            });
+
+            if (response.ok) {
+                alert(`Mesa ${isEditing ? 'actualizada' : 'creada'} correctamente.`);
+                closeMesaModal();
+                loadMesas(); // Recargar las mesas para mostrar los cambios
+            } else {
+                // Idealmente, el backend devolvería un error específico
+                alert('Error al guardar la mesa. Es posible que el ID ya exista.');
+            }
+        } catch (error) {
+            console.error('Error de red al guardar la mesa:', error);
+            alert('No se pudo conectar al servidor para guardar la mesa.');
+        }
     }
-  } catch (error) {
-    console.error("Error al guardar el platillo:", error);
-    alert("Error al guardar el platillo. Verifica tu conexión con el servidor.");
-  }
-}
 
-    window.onload = loadMenu;
 
-    function switchTab(tabName) {
+    // --- LÓGICA DE NAVEGACIÓN Y UTILIDADES ---
+    function switchTab(tabName, event) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.getElementById(`tab${capitalize(tabName)}`).classList.add('active');
-      event.target.classList.add('active');
+      document.getElementById(`tab${tabName}`).classList.add('active');
+      event.currentTarget.classList.add('active');
     }
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-  </script>
+    window.onload = () => {
+        loadMenu();
+        loadMesas();
+    };
+</script>
 </body>
 </html>
