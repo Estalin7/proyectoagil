@@ -51,8 +51,7 @@ public class ProductoService {
 
     
     public Producto createProducto(String nombre, String categoriaNombre, Double precio,
-                                   String descripcion, Integer cantidadDisponible) {
-        
+                                   String descripcion, Integer cantidadDisponible, String imagenUrl) {
 
         Categoria categoria = categoriaRepository.findAll().stream()
                 .filter(c -> c.getNombre().equalsIgnoreCase(categoriaNombre))
@@ -64,6 +63,7 @@ public class ProductoService {
         producto.setCategoria(categoria);
         producto.setPrecio(precio);
         producto.setDescripcion(descripcion);
+        producto.setImagenUrl(imagenUrl);
 
         Producto newProducto = productoRepository.save(producto);
 
@@ -76,13 +76,19 @@ public class ProductoService {
     }
 
     
-    public Producto editProducto(String nombreExistente, String nuevoNombre, String categoriaNombre, Double precio, String descripcion, Integer cantidadDisponible) {
-         Producto producto = findByNombre(nombreExistente)
+    public Producto editProducto(String nombreExistente, String nuevoNombre, String categoriaNombre, 
+                                Double precio, String descripcion, Integer cantidadDisponible, String nuevaImagenUrl) {
+        Producto producto = findByNombre(nombreExistente)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + nombreExistente));
-
+        
         producto.setNombre(nuevoNombre);
         producto.setPrecio(precio);
         producto.setDescripcion(descripcion);
+
+        // Actualizar imagen solo si se proporcionó una nueva
+        if (nuevaImagenUrl != null) {
+            producto.setImagenUrl(nuevaImagenUrl);
+        }
 
         Categoria categoria = categoriaRepository.findByNombre(categoriaNombre)
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada: " + categoriaNombre));
@@ -98,12 +104,26 @@ public class ProductoService {
         return productoActualizado;
     }
 
+    // Buscar por categoría
+    public List<ProductoResponse> findByCategoria(String nombreCategoria) {
+        return productoRepository.findAll().stream()
+                .filter(p -> p.getCategoria().getNombre().equalsIgnoreCase(nombreCategoria))
+                .map(p -> {
+                    Inventario inv = inventarioRepository.findById(p.getIdProducto())
+                            .orElse(new Inventario(p.getIdProducto(), 0));
+                    return new ProductoResponse(p, inv.getCantDispo());
+                })
+                .collect(Collectors.toList());
+    }
+
+
     public static class ProductoResponse {
         private final Long idProducto;
         private final String nombre;
         private final Categoria categoria;
         private final Double precio;
         private final String descripcion;
+        private final String imagenUrl;
         private final Integer cantidad;
         private final String estado; // "Disponible" o "Agotado"
 
@@ -113,6 +133,7 @@ public class ProductoService {
             this.categoria = p.getCategoria();
             this.precio = p.getPrecio();
             this.descripcion = p.getDescripcion();
+            this.imagenUrl = p.getImagenUrl();
             this.cantidad = cantidad;
             this.estado = cantidad > 0 ? "Disponible" : "Agotado";
         }
@@ -123,6 +144,7 @@ public class ProductoService {
         public Categoria getCategoria() { return categoria; }
         public Double getPrecio() { return precio; }
         public String getDescripcion() { return descripcion; }
+        public String getImagenUrl() { return imagenUrl; }
         public Integer getCantidad() { return cantidad; }
         public String getEstado() { return estado; }
     }

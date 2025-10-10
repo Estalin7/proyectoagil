@@ -28,6 +28,9 @@ public class Producto {
     @Column(name = "descripcion", length = 255)
     private String descripcion;
 
+    @Column(name = "imagen_url", length = 500)
+    private String imagenUrl;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", nullable = false)
     private Categoria categoria;
@@ -36,11 +39,12 @@ public class Producto {
     public Producto() {}
 
     // Constructor con parámetros
-    public Producto(Long idProducto, String nombre, Double precio, String descripcion, Categoria categoria) {
+    public Producto(Long idProducto, String nombre, Double precio, String descripcion, String imagenUrl, Categoria categoria) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.precio = precio;
         this.descripcion = descripcion;
+        this.imagenUrl = imagenUrl;
         this.categoria = categoria;
     }
 
@@ -76,6 +80,16 @@ public class Producto {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+
 
     public Categoria getCategoria() {
         return categoria;
